@@ -7,5 +7,5 @@ token_secret <- "b2tPn1dFVshnV5zCb7h4jSYWXlm5BeAlfdNnA1cYvEIGl" # From dev.twitt
 setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 
-tweets <- searchTwitter("arrow OR #arrow", n=100, lang="en", since="2014-08-20")
+tweets <- searchTwitter("'Madam Secretary' OR '#MadamSecretary'", n=100, lang="en", since="2010-08-20")
 tweets.df <- twListToDF(tweets)
