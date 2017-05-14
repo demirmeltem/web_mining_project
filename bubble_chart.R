@@ -68,3 +68,8 @@ g <- ggplot(all_series, aes(Loss_Gain, Drop, size = AveragePerEpisode, frame = S
   scale_x_log10()  # convert to log scale
 
 gganimate(g, interval=0.2)
+
+
+
+
+# site: https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html , http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#org7628198

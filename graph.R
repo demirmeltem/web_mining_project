@@ -41,11 +41,13 @@ Column <- gvisColumnChart(ten_series)
 plot(Column)
 
 
+#bubble chart with googleVis
 
-Bubble <- gvisBubbleChart(ten_series, idvar = ten_series$Show, 
-                          xvar=ten_series$AveragePerEpisode, yvar=ten_series$Drop,
-                          colorvar=ten_series$Network, sizevar=ten_series$Loss_Gain,
-                          options=list(
-                            hAxis='{minValue:75, maxValue:125}'))
+Bubble <- gvisBubbleChart( ten_series, idvar = "Show", 
+                           xvar="Drop", yvar="AveragePerEpisode",
+                           colorvar="Network", sizevar="Loss_Gain",
+                           options=list(
+                             hAxis='{minValue:50, maxValue:100}'))
+
 plot(Bubble)
 
