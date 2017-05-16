@@ -1,15 +1,51 @@
 library(shiny)
 
 shinyUI(fluidPage(
-  titlePanel("Web Mining Project"),
   
-  sidebarLayout(position= "right",
-                sidebarPanel("sidebar panel"),
-                mainPanel("main panel",
-                          h1("First", align="center"),
-                          h2("Second"),
-                          h3("Third"))
-                )
+  navbarPage("Menu",
+             tabPanel("General",
+                      mainPanel(
+                        plotOutput("plot2")
+                      )
+             ),
+             tabPanel("Viewer Rate",
+                      sidebarLayout(position= "right",
+                                    sidebarPanel(
+                                      selectInput("season", "Season",
+                                                  choices = seasons,
+                                                  selected = ""),
+                                      selectInput("series_name", "Series",
+                                                  choices = season_series)
+                                    ),
+                                    mainPanel(
+                                      plotOutput("episode_plot")
+                                    ))
+             ),
+             tabPanel("Word Cloud", 
+                      sidebarLayout(position= "right",
+                                    sidebarPanel(
+                                      selectInput("series_name", "Series",
+                                                  choices = all_series)
+                                    ),
+                                    mainPanel(
+                                      plotOutput("word_cloud")
+                                    ))
+             ),
+             tabPanel("TreeMap",
+                      sidebarLayout(position= "right",
+                                    sidebarPanel(
+                                      selectInput("season", "Season",
+                                                  choices = seasons,
+                                                  selected = "")
+                                    ),
+                                    mainPanel(
+                                      plotOutput("tree_map")
+                                    ))
+             )
+  )
   
- 
+  
+  
+  
+  
 ))

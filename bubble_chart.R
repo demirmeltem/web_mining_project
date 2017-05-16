@@ -49,7 +49,6 @@ g <- ggplot(ten_series, aes(Loss_Gain, Drop, label = Show)) +
        title="Bubble chart")
 
 g + geom_jitter(aes(col=Network, size=AveragePerEpisode)) + 
-  geom_smooth(aes(col=Network), method="lm", se=F) +
   geom_text(check_overlap = TRUE)
 
 #animasyonlu bubble chart by seasons
@@ -57,19 +56,56 @@ g + geom_jitter(aes(col=Network, size=AveragePerEpisode)) +
 library(ggplot2)
 library(gganimate)
 library(gapminder)
+
 theme_set(theme_bw())  # pre-set the bw theme.
 
-g <- ggplot(all_series, aes(Loss_Gain, Drop, size = AveragePerEpisode, frame = Season)) +
+g <- ggplot(ten_series, aes(Loss_Gain, Drop, size = AveragePerEpisode, frame = Season)) +
   geom_point() +
-  geom_smooth(aes(group = Season), 
+  geom_smooth(aes(group = ten_series$Season), 
               method = "lm", 
               show.legend = FALSE) +
-  facet_wrap(~Network, scales = "free") +
-  scale_x_log10()  # convert to log scale
+  facet_wrap(~ten_series$Network, scales = "free") +
+  scale_x_log10()+  # convert to log scale
+  
 
-gganimate(g, interval=0.2)
+gganimate(g)
+
+#deneme sclae
+library(ggplot2)
+library(ggfittext)
+library(treemapify)
+
+treeMapCoordinates <- treemapify(ten_series,
+                                 area = "AveragePerEpisode",
+                                 fill = "Network",
+                                 label = "Show",
+                                 group = "Network")
+
+treeMapPlot <- ggplotify(treeMapCoordinates) + 
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_brewer(palette = "Dark2")
+
+treeMapPlot
 
 
+library(ggplot2) 
+library(treemapify)
+proglangs <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/proglanguages.csv")
 
+# plot
+treeMapCoordinates <- treemapify(proglangs,
+                                 area = "value",
+                                 fill = "parent",
+                                 label = "id",
+                                 group = "parent")
+
+treeMapPlot <- ggplotify(treeMapCoordinates, label.min.size = 1, label.size = 11 ) + 
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_brewer(palette = "Dark2") 
+
+treeMapPlot
 
 # site: https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html , http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#org7628198
+
