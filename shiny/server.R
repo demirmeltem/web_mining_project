@@ -1,6 +1,11 @@
 library(shiny)
 library(ggplot2)
 #source("twitter.r")
+library(ggfittext)
+library(treemapify)
+library(gapminder)
+library(gganimate)
+theme_set(theme_bw())
 
 shinyServer(function(input, output, session) {
   observe({
@@ -21,11 +26,11 @@ shinyServer(function(input, output, session) {
     }
     
     ggplot(one_series_episode, aes(y=Value, x=Episode, group=1)) + 
-      geom_line(color = "red") + 
+      geom_line(color = "brown") + 
       geom_point(size=3) + 
       labs(x="Episode", y="Viewer Rate") + 
       ggtitle("Rating by Episode")+
-      theme(plot.background = element_rect(fill = "pink"))
+      theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5, color="brown"))
   })
   
   output$plot2 <- renderPlot({
@@ -56,10 +61,12 @@ shinyServer(function(input, output, session) {
   })
   
   output$tree_map <- renderPlot({
-    #Treemap
-    library(ggplot2)
-    library(ggfittext)
-    library(treemapify)
+    
+    first[, 'AveragePerEpisode'] <- as.numeric(as.character(first[, 'AveragePerEpisode']))
+    first[, 'Show'] <- as.character(first[, 'Show'])
+    first[, 'Network'] <- as.character(first[, 'Network'])
+    first[, 'Loss_Gain'] <-as.numeric(as.character(first[, 'Loss_Gain']))
+    first[, 'Drop'] <-as.numeric(as.character(first[, 'Drop']))
     
     treeMapCoordinates <- treemapify(first,
                                      area = "AveragePerEpisode",
@@ -73,5 +80,22 @@ shinyServer(function(input, output, session) {
       scale_fill_brewer(palette = "Set2")
     
     treeMapPlot
+    
+  })
+  output$introduction({
+    all_series[, 'AveragePerEpisode'] <- as.numeric(as.character(all_series[, 'AveragePerEpisode']))
+    all_series[, 'Show'] <- as.character(all_series[, 'Show'])
+    all_series[, 'Network'] <- as.character(all_series[, 'Network'])
+    all_series[, 'Loss_Gain'] <-as.numeric(as.character(all_series[, 'Loss_Gain']))
+    all_series[, 'Drop'] <-as.numeric(as.character(all_series[, 'Drop']))
+    all_series[, 'Season'] <-as.character(all_series[, 'Season'])
+    
+    p <- ggplot(all_series, aes(Drop, AveragePerEpisode, size = Loss_Gain, color = Network, frame = Season )) +
+      geom_point() +
+      ggtitle("Animation by Season")+
+      labs(x="Drop Rate", y="Average of Episodes")
+    scale_x_log10()
+    
+    gganimate(p, interval = 1)
   })
 })
