@@ -74,4 +74,28 @@ shinyServer(function(input, output, session) {
     
     treeMapPlot
   })
+  
+  # word cloud
+  terms <- reactive({
+    # Change when the "update" button is pressed...
+    input$update
+    # ...but not for anything else
+    isolate({
+      withProgress({
+        setProgress(message = "Processing corpus...")
+        getTermMatrix(input$selection)
+      })
+    })
+  })
+  
+  # Make the wordcloud drawing predictable during a session
+  wordcloud_rep <- repeatable(wordcloud)
+  
+  
+  output$word_cloud_plot <- renderPlot({
+    v <- terms()
+    wordcloud_rep(names(v), v, scale=c(5, .5), random.order=FALSE,
+                  min.freq = input$freq, max.words=input$max,
+                  colors = brewer.pal(4, "Dark2"))
+  })
 })
