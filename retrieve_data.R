@@ -22,6 +22,7 @@ for(i in 1:length(series_urls)){
   Sys.sleep(1)
 }
 
+all_series <- all_series[-291,]
 all_series[, 'AveragePerEpisode'] <- as.numeric(as.character(all_series[, 'AveragePerEpisode']))
 all_series[, 'Show'] <- as.character(all_series[, 'Show'])
 all_series[, 'Network'] <- as.character(all_series[, 'Network'])

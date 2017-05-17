@@ -60,19 +60,17 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$tree_map <- renderPlot({
+  output$tree_map_plot <- renderPlot({
+    print(input$tree_map_season)
+    season <- get_season(input$tree_map_season)
+    season_series <- all_series[all_series$Season == season, ]
     
-    first[, 'AveragePerEpisode'] <- as.numeric(as.character(first[, 'AveragePerEpisode']))
-    first[, 'Show'] <- as.character(first[, 'Show'])
-    first[, 'Network'] <- as.character(first[, 'Network'])
-    first[, 'Loss_Gain'] <-as.numeric(as.character(first[, 'Loss_Gain']))
-    first[, 'Drop'] <-as.numeric(as.character(first[, 'Drop']))
-    
-    treeMapCoordinates <- treemapify(first,
+    treeMapCoordinates <- treemapify(season_series,
                                      area = "AveragePerEpisode",
                                      fill = "Network",
                                      label = "Show",
-                                     group = "Network"
+                                     group = "Network",
+                        
     )
     treeMapPlot <- ggplotify(treeMapCoordinates) +
       scale_x_continuous(expand = c(0, 0)) +
@@ -82,20 +80,5 @@ shinyServer(function(input, output, session) {
     treeMapPlot
     
   })
-  output$introduction({
-    all_series[, 'AveragePerEpisode'] <- as.numeric(as.character(all_series[, 'AveragePerEpisode']))
-    all_series[, 'Show'] <- as.character(all_series[, 'Show'])
-    all_series[, 'Network'] <- as.character(all_series[, 'Network'])
-    all_series[, 'Loss_Gain'] <-as.numeric(as.character(all_series[, 'Loss_Gain']))
-    all_series[, 'Drop'] <-as.numeric(as.character(all_series[, 'Drop']))
-    all_series[, 'Season'] <-as.character(all_series[, 'Season'])
-    
-    p <- ggplot(all_series, aes(Drop, AveragePerEpisode, size = Loss_Gain, color = Network, frame = Season )) +
-      geom_point() +
-      ggtitle("Animation by Season")+
-      labs(x="Drop Rate", y="Average of Episodes")
-    scale_x_log10()
-    
-    gganimate(p, interval = 1)
-  })
+  
 })
