@@ -5,7 +5,12 @@ shinyUI(fluidPage(
   navbarPage("Menu",
              tabPanel("General",
                       mainPanel(
-                        plotOutput("plot2")
+                        plotOutput("plot2", height = "550")
+                      )
+             ),
+             tabPanel("Introduction",
+                      mainPanel(
+                        imageOutput("animation")
                       )
              ),
              tabPanel("Viewer Rate",
@@ -18,7 +23,7 @@ shinyUI(fluidPage(
                                                   choices = season_series)
                                     ),
                                     mainPanel(
-                                      plotOutput("episode_plot")
+                                      plotOutput("episode_plot", height = "550")
                                     ))
              ),
              tabPanel("Word Cloud", 
@@ -28,7 +33,7 @@ shinyUI(fluidPage(
                                                   choices = all_series)
                                     ),
                                     mainPanel(
-                                      plotOutput("word_cloud")
+                                      plotOutput("word_cloud", height = "550")
                                     ))
              ),
              tabPanel("TreeMap",
@@ -39,7 +44,8 @@ shinyUI(fluidPage(
                                                   selected = "")
                                     ),
                                     mainPanel(
-                                      plotOutput("tree_map_plot")
+                                      plotOutput("tree_map_plot", height = "550")
+                                      
                                     ))
              )
   )

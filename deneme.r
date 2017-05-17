@@ -28,7 +28,7 @@ theme_set(theme_bw())
 p <- ggplot(all_series, aes(Drop, AveragePerEpisode, size = Loss_Gain, color = Network, frame = Season )) +
   geom_point() +
   ggtitle("Animation by Season")+
-  labs(x="Drop Rate", y="Average of Episodes")
+  labs(x="Drop Rate", y="Average of Episodes")+
   scale_x_log10()
 
 gganimate(p, interval = 1)

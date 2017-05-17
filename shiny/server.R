@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
                                      area = "AveragePerEpisode",
                                      fill = "Network",
                                      label = "Show",
-                                     group = "Network",
+                                     group = "Network"
                         
     )
     treeMapPlot <- ggplotify(treeMapCoordinates) +
@@ -81,4 +81,21 @@ shinyServer(function(input, output, session) {
     
   })
   
-})
+  output$animation <- renderImage({
+    
+    theme_set(theme_bw())
+    outfile <- tempfile(fileext = '.gif')
+    p <- ggplot(all_series, aes(Drop, AveragePerEpisode, size = Loss_Gain, color = Network, frame = Season )) +
+      geom_point() +
+      ggtitle("Animation by Season")+
+      labs(x="Drop Rate", y="Average of Episodes")+
+      scale_x_log10()
+    
+    gganimate(p, "outfile.gif")
+    
+    list(src = "outfile.gif",
+         contentType = 'image/gif',
+         alt = "This is alternate text")})
+  
+  })
+  
