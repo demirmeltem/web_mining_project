@@ -38,11 +38,11 @@ shinyServer(function(input, output, session) {
       theme(axis.text.x = element_text(size = 10, color="brown")) +
       theme(axis.text.y = element_text(size = 10, color="brown")) +
       ggtitle("Viewers Rate by Episode")+
-      theme(plot.title = element_text(size = 24, face = "bold", family="URWTimes", hjust = 0.5, color="#89b2f4"))
+      theme(plot.title = element_text(size = 24, face = "bold", family="URWTimes", hjust = 0.5, color="#098474"))
   })
   
   output$pie_plot <- renderPlot({
-    season <- get_season(input$season)
+    season <- get_season(input$tree_map_season)
     one_season_series <- all_series[all_series$Season == season, ]
     one_season_series[, 'AveragePerEpisode'] <- as.numeric(as.character(one_season_series[, 'AveragePerEpisode']))
     avr_network <- aggregate(AveragePerEpisode ~ Network, data = one_season_series, FUN=mean)
@@ -61,10 +61,24 @@ shinyServer(function(input, output, session) {
       coord_polar("y", start=0)
     
     pie + blank_theme +
-      theme(axis.text.x=element_blank())+
-      geom_text(aes(y = AveragePerEpisode/3 + c(0, cumsum(AveragePerEpisode)[-length(AveragePerEpisode)]), 
-                    label = AveragePerEpisode), size=5)
+      theme(axis.text.x=element_blank())
+  })
+  
+  output$avg_views_plot <- renderPlot({
+    season <- get_season(input$tree_map_season)
+    one_season_series <- all_series[all_series$Season == season, ]
+    one_season_series[, 'AveragePerEpisode'] <- as.numeric(as.character(one_season_series[, 'AveragePerEpisode']))
+    avr_network <- aggregate(AveragePerEpisode ~ Network, data = one_season_series, FUN=mean)
     
+    ggplot(data=avr_network, aes(x=Network, y=AveragePerEpisode)) +
+      geom_bar(stat="identity", color="blue", fill="#7fdb89") + 
+      labs(x="\nTv Channel", y="Average Per Episode") +
+      theme(axis.title = element_text(size=14, family = "URWTimes")) +
+      
+      theme(axis.text.x = element_text(size = 15, color="brown")) +
+      theme(axis.text.y = element_text(size = 15, color="brown")) +
+      ggtitle("Average Views Rate by Channel")+
+      theme(plot.title = element_text(size = 24, face = "bold", family="URWTimes", hjust = 0.5, color="#098474"))
     
   })
   
@@ -82,7 +96,9 @@ shinyServer(function(input, output, session) {
     treeMapPlot <- ggplotify(treeMapCoordinates) +
       scale_x_continuous(expand = c(0, 0)) +
       scale_y_continuous(expand = c(0, 0)) +
-      scale_fill_brewer(palette = "Set2")
+      scale_fill_brewer(palette = "Set2") +
+      ggtitle("\nTV Series by Channel") + 
+      theme(plot.title = element_text(size = 24, face = "bold", family="URWTimes", hjust = 0.5, color="#098474"))
     
     treeMapPlot
     
@@ -94,7 +110,7 @@ shinyServer(function(input, output, session) {
     outfile <- tempfile(fileext = '.gif')
     p <- ggplot(all_series, aes(Drop, AveragePerEpisode, size = Loss_Gain, color = Network, frame = Season )) +
       geom_point() +
-      ggtitle("Animation by Season")+
+      ggtitle("TV Series and Channels by Season")+
       labs(x="Drop Rate", y="Average of Episodes")+
       scale_x_log10()
     
@@ -125,7 +141,7 @@ shinyServer(function(input, output, session) {
   output$word_cloud_plot <- renderPlot({
     v <- terms()
     wordcloud_rep(names(v), v, scale=c(5, .5), random.order=FALSE,
-                  min.freq = input$freq, max.words=input$max,
+                  min.freq = input$freq, max.words=input$max, rot.per=0.35,
                   colors = brewer.pal(4, "Dark2"))
   })
 })

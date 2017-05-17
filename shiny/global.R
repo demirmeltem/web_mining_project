@@ -12,7 +12,7 @@ getTermMatrix <- function(series_name) {
   myCorpus = tm_map(myCorpus, removePunctuation)
   myCorpus = tm_map(myCorpus, removeNumbers)
   myCorpus = tm_map(myCorpus, removeWords,
-                    c(stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but"))
+                    c(stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but", tolower(gsub(" ", "", series_name))))
   
   myDTM = TermDocumentMatrix(myCorpus,
                              control = list(minWordLength = 1))

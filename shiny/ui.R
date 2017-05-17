@@ -3,21 +3,31 @@ library(shiny)
 shinyUI(fluidPage(
   
   navbarPage("Menu",
-           
-             tabPanel("Introduction",
-                      column(12,
-                             "Fluid 12",
-                             fluidRow(
-                               column(6,
-                                      plotOutput("pie_plot")
-                               ),
-                               column(width = 6,
-                                      imageOutput("animation", height = "550"))
-                             )
-
+             tabPanel("General",
+                      fixedRow(
+                        column(9,
+                               tags$h2("Top TV Series Ratings"),
+                               fixedRow(
+                                 column(9,
+                                        tags$br(),
+                                        "Hey!  We have built a beautiful, hand-crafted website with shiny framework. This website is to show you ratings of the series with various graphs. You can also see drop, loss/gain, average of views, episode of views and channels. We fecthed the data from rating website which is http://www.spoilertv.com . We did it for you. I hope, you enjoy it!",
+                                        tags$br(),
+                                        tags$img(height = 352, width = 352, src="http://orig14.deviantart.net/7d96/f/2013/287/d/3/tv_series_icon_by_quaffleeye-d6qj64q.png")
+                                        ),
+                                 column(3,
+                                        imageOutput("animation")
+                                 )
+                               )
+                        )
                       )
+                      
+                      
+                       
+                      
+                      
+                      
              ),
-             tabPanel("Viewer Rate",
+             tabPanel("Viewers Rate",
                       sidebarLayout(position= "right",
                                     sidebarPanel(
                                       selectInput("season", "Season",
@@ -27,7 +37,7 @@ shinyUI(fluidPage(
                                                   choices = season_series)
                                     ),
                                     mainPanel(
-                                      plotOutput("episode_plot", height = "550")
+                                      plotOutput("episode_plot", height = 500)
                                     ))
              ),
              tabPanel("Word Cloud", 
@@ -35,7 +45,7 @@ shinyUI(fluidPage(
                         # Sidebar with a slider and selection inputs
                         sidebarPanel(
                           selectInput("selection", "Choose a series",
-                                      choices = unique(all_series$Show)),
+                                      choices = (all_series$Show)),
                           actionButton("update", "Change"),
                           hr(),
                           sliderInput("freq",
@@ -48,13 +58,15 @@ shinyUI(fluidPage(
                         
                         # Show Word Cloud
                         mainPanel(
-                          plotOutput("word_cloud_plot")
+                          plotOutput("word_cloud_plot", height = 550)
                         )
                       )
                       
                       
+                      
+                  
              ),
-             tabPanel("TreeMap",
+             tabPanel("By Season",
                       sidebarLayout(position= "right",
                                     sidebarPanel(
                                       selectInput("tree_map_season", "Season",
@@ -62,9 +74,16 @@ shinyUI(fluidPage(
                                                   selected = "")
                                     ),
                                     mainPanel(
-                                      plotOutput("tree_map_plot", height = "550")
-                                      
+                                      tabsetPanel(
+                                        tabPanel("Average Views", 
+                                                 plotOutput("avg_views_plot", height = 500)
+                                                 ),
+                                        tabPanel("TV Series by Channel", 
+                                                 plotOutput("tree_map_plot", height = 500)
+                                                 )
+                                      )
                                     ))
+
              )
   )
   
