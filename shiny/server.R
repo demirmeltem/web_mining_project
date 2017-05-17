@@ -1,6 +1,15 @@
 library(shiny)
 library(ggplot2)
 #source("twitter.r")
+library(ggfittext)
+library(treemapify)
+library(gapminder)
+library(gganimate)
+library(ggfittext)
+library(treemapify)
+library(gapminder)
+library(gganimate)
+theme_set(theme_bw())
 
 shinyServer(function(input, output, session) {
   observe({
@@ -21,11 +30,15 @@ shinyServer(function(input, output, session) {
     }
     
     ggplot(one_series_episode, aes(y=Value, x=Episode, group=1)) + 
-      geom_line(color = "red") + 
+      geom_line(color = "brown", size=1) + 
       geom_point(size=3) + 
-      labs(x="Episode", y="Viewer Rate") + 
-      ggtitle("Rating by Episode")+
-      theme(plot.background = element_rect(fill = "pink"))
+      labs(x="\nEpisode", y="Viewer Rate(x10000)\n") + 
+      theme(axis.title = element_text(size=14)) +
+      
+      theme(axis.text.x = element_text(size = 10, color="brown")) +
+      theme(axis.text.y = element_text(size = 10, color="brown")) +
+      ggtitle("Viewers Rate by Episode")+
+      theme(plot.title = element_text(size = 24, face = "bold", hjust = 0.5, color="blue"))
   })
   
   output$plot2 <- renderPlot({
@@ -55,17 +68,16 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$tree_map <- renderPlot({
-    #Treemap
-    library(ggplot2)
-    library(ggfittext)
-    library(treemapify)
+  output$tree_map_plot <- renderPlot({
+    season <- get_season(input$tree_map_season)
+    season_series <- all_series[all_series$Season == season, ]
     
-    treeMapCoordinates <- treemapify(first,
+    treeMapCoordinates <- treemapify(season_series,
                                      area = "AveragePerEpisode",
                                      fill = "Network",
                                      label = "Show",
-                                     group = "Network"
+                                     group = "Network",
+                        
     )
     treeMapPlot <- ggplotify(treeMapCoordinates) +
       scale_x_continuous(expand = c(0, 0)) +
@@ -73,6 +85,7 @@ shinyServer(function(input, output, session) {
       scale_fill_brewer(palette = "Set2")
     
     treeMapPlot
+    
   })
   
   # word cloud

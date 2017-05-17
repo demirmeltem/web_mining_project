@@ -50,12 +50,12 @@ shinyUI(fluidPage(
              tabPanel("TreeMap",
                       sidebarLayout(position= "right",
                                     sidebarPanel(
-                                      selectInput("season", "Season",
+                                      selectInput("tree_map_season", "Season",
                                                   choices = seasons,
                                                   selected = "")
                                     ),
                                     mainPanel(
-                                      plotOutput("tree_map")
+                                      plotOutput("tree_map_plot")
                                     ))
              )
   )

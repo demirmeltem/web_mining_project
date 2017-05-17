@@ -22,6 +22,7 @@ for(i in 1:length(series_urls)){
   Sys.sleep(1)
 }
 
+all_series <- all_series[-which(all_series$Show == "Coach" & all_series$Season == "2015_16"),]
 all_series[, 'AveragePerEpisode'] <- as.numeric(as.character(all_series[, 'AveragePerEpisode']))
 all_series[, 'Show'] <- as.character(all_series[, 'Show'])
 all_series[, 'Network'] <- as.character(all_series[, 'Network'])
@@ -29,25 +30,13 @@ all_series[, 'Loss_Gain'] <-as.numeric(as.character(all_series[, 'Loss_Gain']))
 all_series[, 'Drop'] <-as.numeric(as.character(all_series[, 'Drop']))
 all_series[, 'Season'] <-as.character(all_series[, 'Season'])
 
+# for(i in 1:length(all_series$Show)){
+#   for(j in 3:26){
+#     all_series[i, j] <- as.double(as.character(all_series[i, j]))
+#   }
+#   
+# }
 
-#deneme
-
-first <- all_series[all_series$Season == "2012_13",]
-first[, 'AveragePerEpisode'] <- as.numeric(as.character(first[, 'AveragePerEpisode']))
-first[, 'Show'] <- as.character(first[, 'Show'])
-first[, 'Network'] <- as.character(first[, 'Network'])
-first[, 'Loss_Gain'] <-as.numeric(as.character(first[, 'Loss_Gain']))
-first[, 'Drop'] <-as.numeric(as.character(first[, 'Drop']))
-
-ten_series <- first[1:10, ]
-ten_series <- ten_series[order(ten_series$AveragePerEpisode), ]
-ten_series[, 'Show'] <- as.character(ten_series[, 'Show'])
-ten_series[, 'Network'] <- as.character(ten_series[, 'Network'])
-ten_series[, 'Loss_Gain'] <-as.numeric(as.character(ten_series[, 'Loss_Gain']))
-ten_series[, 'Drop'] <-as.numeric(as.character(ten_series[, 'Drop']))
-ten_series[, 'AveragePerEpisode'] <-as.numeric(as.character(ten_series[, 'AveragePerEpisode']))
-
-avr_network <- aggregate(AveragePerEpisode ~ Network, data = first, FUN=mean)
 
 
 
