@@ -10,7 +10,7 @@ shinyUI(fluidPage(
              ),
              tabPanel("Introduction",
                       mainPanel(
-                        imageOutput("animation")
+                        imageOutput("animation", height = "550")
                       )
              ),
              tabPanel("Viewer Rate",

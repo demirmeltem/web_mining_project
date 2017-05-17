@@ -5,6 +5,10 @@ library(ggfittext)
 library(treemapify)
 library(gapminder)
 library(gganimate)
+library(ggfittext)
+library(treemapify)
+library(gapminder)
+library(gganimate)
 theme_set(theme_bw())
 
 shinyServer(function(input, output, session) {
@@ -26,11 +30,15 @@ shinyServer(function(input, output, session) {
     }
     
     ggplot(one_series_episode, aes(y=Value, x=Episode, group=1)) + 
-      geom_line(color = "brown") + 
+      geom_line(color = "brown", size=1) + 
       geom_point(size=3) + 
-      labs(x="Episode", y="Viewer Rate") + 
-      ggtitle("Rating by Episode")+
-      theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5, color="brown"))
+      labs(x="\nEpisode", y="Viewer Rate(x10000)\n") + 
+      theme(axis.title = element_text(size=14)) +
+      
+      theme(axis.text.x = element_text(size = 10, color="brown")) +
+      theme(axis.text.y = element_text(size = 10, color="brown")) +
+      ggtitle("Viewers Rate by Episode")+
+      theme(plot.title = element_text(size = 24, face = "bold", hjust = 0.5, color="blue"))
   })
   
   output$plot2 <- renderPlot({
@@ -61,7 +69,6 @@ shinyServer(function(input, output, session) {
   })
   
   output$tree_map_plot <- renderPlot({
-    print(input$tree_map_season)
     season <- get_season(input$tree_map_season)
     season_series <- all_series[all_series$Season == season, ]
     
@@ -97,5 +104,28 @@ shinyServer(function(input, output, session) {
          contentType = 'image/gif',
          alt = "This is alternate text")})
   
+
+  # word cloud
+  terms <- reactive({
+    # Change when the "update" button is pressed...
+    input$update
+    # ...but not for anything else
+    isolate({
+      withProgress({
+        setProgress(message = "Processing corpus...")
+        getTermMatrix(input$selection)
+      })
+    })
   })
   
+  # Make the wordcloud drawing predictable during a session
+  wordcloud_rep <- repeatable(wordcloud)
+  
+  
+  output$word_cloud_plot <- renderPlot({
+    v <- terms()
+    wordcloud_rep(names(v), v, scale=c(5, .5), random.order=FALSE,
+                  min.freq = input$freq, max.words=input$max,
+                  colors = brewer.pal(4, "Dark2"))
+  })
+})
