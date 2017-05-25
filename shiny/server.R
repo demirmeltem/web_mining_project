@@ -9,6 +9,10 @@ library(ggfittext)
 library(treemapify)
 library(gapminder)
 library(gganimate)
+library("tm")
+library("SnowballC")
+library("RColorBrewer")
+library("wordcloud")
 theme_set(theme_bw())
 
 shinyServer(function(input, output, session) {
